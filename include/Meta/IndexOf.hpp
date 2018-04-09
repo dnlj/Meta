@@ -1,3 +1,5 @@
+#pragma once
+
 // STD
 #include <type_traits>
 
