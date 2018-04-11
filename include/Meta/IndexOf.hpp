@@ -5,18 +5,22 @@
 
 namespace Meta {
 	/**
-	* @brief 
-	*/
+	 * Gets the index of @p T in the type list @p Types.
+	 * @tparam T The type to get the index of.
+	 * @tparam Types The list of types.
+	 */
 	template<class T, class... Types>
 	struct IndexOf;
 
+	/** @copydoc IndexOf */
 	template<class T, class... Types>
 	struct IndexOf<T, T, Types...>
 		: std::integral_constant<size_t, 0> {
 	};
 
-	template<class T1, class T2, class... Types2>
-	struct IndexOf<T1, T2, Types2...>
-		: std::integral_constant<size_t, IndexOf<T1, Types2...>::value + 1> {
+	/** @copydoc IndexOf */
+	template<class T, class U, class... Types>
+	struct IndexOf<T, U, Types...>
+		: std::integral_constant<size_t, IndexOf<T, Types...>::value + 1> {
 	};
 }
