@@ -1,4 +1,4 @@
-// Metae
+// Meta
 #include <Meta/IndexOf.hpp>
 
 // Google Test
