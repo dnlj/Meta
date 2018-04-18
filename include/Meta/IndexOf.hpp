@@ -5,7 +5,7 @@
 
 namespace Meta {
 	/**
-	 * Gets the index of @p T in the type list @p Types.
+	 * Gets the index of the first occurrence of @p T in the type list @p Types.
 	 * @tparam T The type to get the index of.
 	 * @tparam Types The list of types.
 	 */
