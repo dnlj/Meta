@@ -12,13 +12,13 @@ namespace Meta {
 	template<class T, class... Types>
 	struct IndexOf;
 
-	/** @copydoc IndexOf */
+	/** @see IndexOf */
 	template<class T, class... Types>
 	struct IndexOf<T, T, Types...>
 		: std::integral_constant<size_t, 0> {
 	};
 
-	/** @copydoc IndexOf */
+	/** @see IndexOf */
 	template<class T, class U, class... Types>
 	struct IndexOf<T, U, Types...>
 		: std::integral_constant<size_t, IndexOf<T, Types...>::value + 1> {
