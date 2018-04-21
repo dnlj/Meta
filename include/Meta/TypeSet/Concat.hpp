@@ -1,12 +1,9 @@
 #pragma once
 
-// Meta
-#include <Meta/TypeSet/TypeSet.hpp>
-
 namespace Meta::TypeSet {
 		/**
-		 * @brief Concatenates the type lists of the types in @p Types
-		 * @tparam The list of types.
+		 * Concatenates the type lists of the types in @p Types.
+		 * @tparam Types The list of types.
 		 */
 		template<class... Types>
 		struct Concat;

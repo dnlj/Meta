@@ -4,6 +4,7 @@
 
 // Meta
 #include <Meta/TypeSet/Concat.hpp>
+#include <Meta/TypeSet/TypeSet.hpp>
 
 // Google Test
 #include <gtest/gtest.h>
