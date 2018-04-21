@@ -6,8 +6,8 @@
 namespace Meta::TypeSet {
 	/**
 	 * Checks if the type list of @p Set contains the type @p Type.
-	 * @tparam Set to check.
-	 * @tparam Type the type to check for.
+	 * @tparam Set The set to check.
+	 * @tparam Type The type to check for.
 	 */
 	template<class Set, class Type>
 	struct Has;
