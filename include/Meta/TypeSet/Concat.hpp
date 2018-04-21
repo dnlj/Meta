@@ -8,6 +8,7 @@ namespace Meta::TypeSet {
 		template<class... Types>
 		struct Concat;
 
+		/** @see Concat */
 		template<
 			template<class...> class SetType,
 			class... Types
@@ -15,7 +16,7 @@ namespace Meta::TypeSet {
 			using type = SetType<Types...>;
 		};
 
-		/** @copydoc Concat */
+		/** @see Concat */
 		template<
 			template<class...> class SetType,
 			class... Types1,
@@ -24,7 +25,7 @@ namespace Meta::TypeSet {
 			using type = SetType<Types1..., Types2...>;
 		};
 
-		/** @copydoc Concat */
+		/** @see Concat */
 		template<class Set1, class Set2, class Set3, class... Sets>
 		struct Concat<Set1, Set2, Set3, Sets...> {
 			using type = typename Concat<
