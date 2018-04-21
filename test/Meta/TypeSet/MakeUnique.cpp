@@ -20,7 +20,7 @@
 
 // Define the typed test fixture
 template<class T>
-class MetaTypeSetUniqueTest : public testing::Test {
+class MetaTypeSetMakeUniqueTest : public testing::Test {
 };
 
 // Defined the classes for the tests.
@@ -34,9 +34,9 @@ using Implementations = testing::Types<
 >;
 
 // Define the tests
-TYPED_TEST_CASE(MetaTypeSetUniqueTest, Implementations);
+TYPED_TEST_CASE(MetaTypeSetMakeUniqueTest, Implementations);
 
-TYPED_TEST(MetaTypeSetUniqueTest, Unique) {
+TYPED_TEST(MetaTypeSetMakeUniqueTest, Unique) {
 	{
 		constexpr auto condition = std::is_same<
 			Meta::TypeSet::MakeUnique<TypeParam::Set1>::type,
