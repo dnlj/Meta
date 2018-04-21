@@ -11,9 +11,13 @@
 
 #define CREATE_TEST_TYPE(ClassName, Type)\
 	struct ClassName {\
-		using Set1 = Type<int, float, bool, double>;\
-		using Set2 = Type<char, float, double, long>;\
-		using Concat = Type<int, float, bool, double, char, float, double, long>;\
+		using Set11 = Type<int, float, bool, double>;\
+		using Set12 = Type<char, float, double, long>;\
+		using Concat1 = Type<int, float, bool, double, char, float, double, long>;\
+		\
+		using Set21 = Type<int, int, int, int>;\
+		using Set22 = Type<int, int>;\
+		using Concat2 = Type<int, int, int, int, int, int>;\
 	};\
 
 // Define the typed test fixture
@@ -35,10 +39,21 @@ using Implementations = testing::Types<
 TYPED_TEST_CASE(MetaTypeSetConcatTest, Implementations);
 
 TYPED_TEST(MetaTypeSetConcatTest, Concat) {
-	constexpr auto condition = std::is_same<
-		Meta::TypeSet::Concat<TypeParam::Set1, TypeParam::Set2>::type,
-		TypeParam::Concat
-	>::value;
+	{
+		constexpr auto condition = std::is_same<
+			Meta::TypeSet::Concat<TypeParam::Set11, TypeParam::Set12>::type,
+			TypeParam::Concat1
+		>::value;
 
-	ASSERT_TRUE(condition);
+		ASSERT_TRUE(condition);
+	}
+
+	{
+		constexpr auto condition = std::is_same<
+			Meta::TypeSet::Concat<TypeParam::Set21, TypeParam::Set22>::type,
+			TypeParam::Concat2
+		>::value;
+
+		ASSERT_TRUE(condition);
+	}
 }
