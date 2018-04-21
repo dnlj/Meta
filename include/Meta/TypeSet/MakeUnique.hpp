@@ -17,11 +17,13 @@ namespace Meta::TypeSet {
 		template<class Set, class I = void>
 		struct MakeUnique;
 		
+		/** @see MakeUnique */
 		template<template<class...> class SetType, class... Types>
 		struct MakeUnique<SetType<Types...>, void>
 			: MakeUnique<SetType<Types...>, std::index_sequence_for<Types...>> {
 		};
 
+		/** @see MakeUnique */
 		template<template<class...> class SetType, class... Types, size_t... Indices>
 		struct MakeUnique<SetType<Types...>, std::index_sequence<Indices...>> {
 			using type = typename Concat<
