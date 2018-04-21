@@ -27,11 +27,11 @@ namespace Meta::TypeSet {
 
 		/** @see Concat */
 		template<class Set1, class Set2, class Set3, class... Sets>
-		struct Concat<Set1, Set2, Set3, Sets...> {
-			using type = typename Concat<
+		struct Concat<Set1, Set2, Set3, Sets...>
+			: Concat<
 				typename Concat<Set1, Set2>::type,
 				Set3,
 				Sets...
-			>::type;
+			> {
 		};
 }
