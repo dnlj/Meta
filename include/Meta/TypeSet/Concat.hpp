@@ -3,7 +3,6 @@
 // Meta
 #include <Meta/TypeSet/TypeSet.hpp>
 
-// TODO: Doc
 namespace Meta::TypeSet {
 		/**
 		 * @brief Concatenates the type lists of the types in @p Types
