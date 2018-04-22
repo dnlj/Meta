@@ -48,7 +48,7 @@ workspace(PROJECT_NAME .."Workspace")
 	}
 	targetdir "./bin/%{cfg.buildcfg}_%{cfg.platform}"
 	objdir "./obj/%{prj.name}/%{cfg.buildcfg}_%{cfg.platform}"
-	startproject(PROJECT_NAME)
+	startproject(PROJECT_NAME .."Test")
 	
 	filter "action:vs*"
 		systemversion "10.0.16299.0"
