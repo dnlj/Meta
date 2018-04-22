@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 
 #define CREATE_TEST_TYPE(ClassName, Type)\
-	namespace { struct ClassName {\
+	struct ClassName {\
 		using Set11 = Type<int, float, bool, double>;\
 		using Set12 = Type<int, float, bool, double>;\
 		constexpr static auto value1 = true;\
@@ -30,27 +30,29 @@
 		using Set51 = Type<int, float, bool, double>;\
 		using Set52 = Type<int, float, bool, double, char>;\
 		constexpr static auto value5 = false;\
-	};}\
+	};\
 
 #define CREATE_TEST_ASSERT(N) {\
 	constexpr auto value = Meta::TypeSet::IsSuperSet<TypeParam::Set##N##1, TypeParam::Set##N##2>::value;\
 	ASSERT_EQ(value, TypeParam::value##N);\
 }\
 
-// Define the typed test fixture
-template<class T>
-class MetaTypeSetIsSuperSetTest : public testing::Test {
-};
+namespace {
+	// Define the typed test fixture
+	template<class T>
+	class MetaTypeSetIsSuperSetTest : public testing::Test {
+	};
 
-// Defined the classes for the tests.
-CREATE_TEST_TYPE(TypeSetTest, Meta::TypeSet::TypeSet);
-CREATE_TEST_TYPE(TupleTest, std::tuple);
+	// Defined the classes for the tests.
+	CREATE_TEST_TYPE(TypeSetTest, Meta::TypeSet::TypeSet);
+	CREATE_TEST_TYPE(TupleTest, std::tuple);
 
-// Define the types to use with our typed test
-using Implementations = testing::Types<
-	TypeSetTest,
-	TupleTest
->;
+	// Define the types to use with our typed test
+	using Implementations = testing::Types<
+		TypeSetTest,
+		TupleTest
+	>;
+}
 
 // Define the tests
 TYPED_TEST_CASE(MetaTypeSetIsSuperSetTest, Implementations);

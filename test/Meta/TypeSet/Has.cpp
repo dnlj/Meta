@@ -41,20 +41,22 @@
 		constexpr static auto value7 = false;\
 	};\
 
-// Define the typed test fixture
-template<class T>
-class MetaTypeSetHasTest : public testing::Test {
-};
+namespace {
+	// Define the typed test fixture
+	template<class T>
+	class MetaTypeSetHasTest : public testing::Test {
+	};
 
-// Defined the classes for the tests.
-CREATE_TEST_TYPE(TypeSetTest, Meta::TypeSet::TypeSet);
-CREATE_TEST_TYPE(TupleTest, std::tuple);
+	// Defined the classes for the tests.
+	CREATE_TEST_TYPE(TypeSetTest, Meta::TypeSet::TypeSet);
+	CREATE_TEST_TYPE(TupleTest, std::tuple);
 
-// Define the types to use with our typed test
-using Implementations = testing::Types<
-	TypeSetTest,
-	TupleTest
->;
+	// Define the types to use with our typed test
+	using Implementations = testing::Types<
+		TypeSetTest,
+		TupleTest
+	>;
+}
 
 // Define the tests
 TYPED_TEST_CASE(MetaTypeSetHasTest, Implementations);
