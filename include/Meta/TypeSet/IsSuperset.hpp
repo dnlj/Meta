@@ -7,10 +7,15 @@
 #include <Meta/TypeSet/Has.hpp>
 
 namespace Meta::TypeSet {
-	// TODO: Doc
+	/**
+	 * Check if all the types in the type list of @p Set2 are in the type list of @p Set1.
+	 * @tparam Set1 The first set.
+	 * @tparam Set2 The second set.
+	 */
 	template<class Set1, class Set2>
 	struct IsSuperset;
 
+	/** @see IsSuperset */
 	template<
 		template<class...> class Set1,
 		class... Types1,
