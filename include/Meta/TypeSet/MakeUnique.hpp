@@ -18,19 +18,19 @@ namespace Meta::TypeSet {
 		struct MakeUnique;
 		
 		/** @see MakeUnique */
-		template<template<class...> class SetType, class... Types>
-		struct MakeUnique<SetType<Types...>, void>
-			: MakeUnique<SetType<Types...>, std::index_sequence_for<Types...>> {
+		template<template<class...> class Set, class... Types>
+		struct MakeUnique<Set<Types...>, void>
+			: MakeUnique<Set<Types...>, std::index_sequence_for<Types...>> {
 		};
 
 		/** @see MakeUnique */
-		template<template<class...> class SetType, class... Types, size_t... Indices>
-		struct MakeUnique<SetType<Types...>, std::index_sequence<Indices...>> {
+		template<template<class...> class Set, class... Types, size_t... Indices>
+		struct MakeUnique<Set<Types...>, std::index_sequence<Indices...>> {
 			using type = typename Concat<
 				typename std::conditional<
 					IndexOf<Types, Types...>::value == Indices,
-					SetType<Types>,
-					SetType<>
+					Set<Types>,
+					Set<>
 				>::type...
 			>::type;
 		};
