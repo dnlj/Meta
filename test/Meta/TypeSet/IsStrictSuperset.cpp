@@ -84,7 +84,7 @@ namespace {
 // Define the tests
 TYPED_TEST_CASE(MetaTypeSetIsStrictSupersetTest, Implementations);
 
-TYPED_TEST(MetaTypeSetIsStrictSupersetTest, IsSuperset) {
+TYPED_TEST(MetaTypeSetIsStrictSupersetTest, IsStrictSuperset) {
 	CREATE_TEST_ASSERT(1);
 	CREATE_TEST_ASSERT(2);
 	CREATE_TEST_ASSERT(3);

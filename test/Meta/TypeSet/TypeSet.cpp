@@ -4,7 +4,7 @@
 // Google Test
 #include <gtest/gtest.h>
 
-TEST(MetaTypeSet, Size) {
+TEST(MetaTypeSetTypeSet, Size) {
 	{
 		constexpr auto size = Meta::TypeSet::TypeSet<int>::size;
 		ASSERT_EQ(size, 1);

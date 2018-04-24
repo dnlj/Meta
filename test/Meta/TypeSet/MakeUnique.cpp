@@ -38,7 +38,7 @@ namespace {
 // Define the tests
 TYPED_TEST_CASE(MetaTypeSetMakeUniqueTest, Implementations);
 
-TYPED_TEST(MetaTypeSetMakeUniqueTest, Unique) {
+TYPED_TEST(MetaTypeSetMakeUniqueTest, MakeUnique) {
 	{
 		constexpr auto condition = std::is_same<
 			Meta::TypeSet::MakeUnique<TypeParam::Set1>::type,
