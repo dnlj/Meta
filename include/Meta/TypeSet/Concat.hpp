@@ -10,19 +10,19 @@ namespace Meta::TypeSet {
 
 		/** @see Concat */
 		template<
-			template<class...> class SetType,
+			template<class...> class Set,
 			class... Types
-		> struct Concat<SetType<Types...>> {
-			using type = SetType<Types...>;
+		> struct Concat<Set<Types...>> {
+			using type = Set<Types...>;
 		};
 
 		/** @see Concat */
 		template<
-			template<class...> class SetType,
+			template<class...> class Set,
 			class... Types1,
 			class... Types2
-		> struct Concat<SetType<Types1...>, SetType<Types2...>> {
-			using type = SetType<Types1..., Types2...>;
+		> struct Concat<Set<Types1...>, Set<Types2...>> {
+			using type = Set<Types1..., Types2...>;
 		};
 
 		/** @see Concat */
