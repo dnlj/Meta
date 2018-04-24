@@ -14,18 +14,10 @@ namespace Meta::TypeSet {
 	 * @tparam Set2 The second set.
 	 */
 	template<class Set1, class Set2>
-	struct IsEqual;
-
-	/** @see Equals */
-	template<
-		template<class...> class Set1,
-		class... Types1,
-		template<class...> class Set2,
-		class... Types2
-	> struct IsEqual<Set1<Types1...>, Set2<Types2...>>
+	struct IsEqual
 		: std::conjunction<
-			IsSuperset<Set1<Types1...>, Set2<Types2...>>,
-			IsSuperset<Set2<Types2...>, Set1<Types1...>>
+			IsSuperset<Set1, Set2>,
+			IsSuperset<Set2, Set1>
 		> {
 	};
 }
