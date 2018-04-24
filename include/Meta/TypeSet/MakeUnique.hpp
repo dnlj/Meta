@@ -25,13 +25,13 @@ namespace Meta::TypeSet {
 
 		/** @see MakeUnique */
 		template<template<class...> class Set, class... Types, size_t... Indices>
-		struct MakeUnique<Set<Types...>, std::index_sequence<Indices...>> {
-			using type = typename Concat<
+		struct MakeUnique<Set<Types...>, std::index_sequence<Indices...>>
+			: Concat<
 				typename std::conditional<
 					IndexOf<Types, Types...>::value == Indices,
 					Set<Types>,
 					Set<>
 				>::type...
-			>::type;
+			> {;
 		};
 }
