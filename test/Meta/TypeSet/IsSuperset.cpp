@@ -11,32 +11,32 @@
 
 #define CREATE_TEST_TYPE(ClassName, Type)\
 	struct ClassName {\
-		/* A.size > B.size && IsSuperset == true */\
+		/* A.size > B.size; same types */\
 		using Set11 = Type<int, float, bool, double>;\
 		using Set12 = Type<float, double>;\
 		constexpr static auto value1 = true;\
 		\
-		/* A.size > B.size && IsSuperset == false */\
+		/* A.size > B.size; different types */\
 		using Set21 = Type<int, float, bool, double>;\
 		using Set22 = Type<char, double>;\
 		constexpr static auto value2 = false;\
 		\
-		/* A.size == B.size && IsSuperset == true */\
+		/* A.size == B.size; same types */\
 		using Set31 = Type<int, float, bool, double>;\
 		using Set32 = Type<int, float, bool, double>;\
 		constexpr static auto value3 = true;\
 		\
-		/* A.size == B.size && IsSuperset == false */\
+		/* A.size == B.size; different types */\
 		using Set41 = Type<int, float, bool, double>;\
 		using Set42 = Type<int, float, long, double>;\
 		constexpr static auto value4 = false;\
 		\
-		/* A.size < B.size && IsSuperset == false */\
+		/* A.size < B.size; same types */\
 		using Set51 = Type<float, double>;\
 		using Set52 = Type<int, float, bool, double>;\
 		constexpr static auto value5 = false;\
 		\
-		/* A.size < B.size && IsSuperset == false */\
+		/* A.size < B.size; different types */\
 		using Set61 = Type<char, double>;\
 		using Set62 = Type<int, float, bool, double>;\
 		constexpr static auto value6 = false;\
