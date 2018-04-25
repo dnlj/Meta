@@ -10,7 +10,7 @@
 
 namespace Meta::TypeSet {
 	/**
-	 * Gets the common types form the type lists of @p Set1, @p Set2, and Sets.
+	 * Gets the common types form the type lists of @p Set1, @p Set2, and @p Sets.
 	 * @tparam Set1 The first set.
 	 * @tparam Set2 The second set.
 	 * @tparam Sets Any additional sets.
