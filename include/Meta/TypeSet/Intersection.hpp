@@ -9,7 +9,12 @@
 #include <Meta/TypeSet/Concat.hpp>
 
 namespace Meta::TypeSet {
-	// TODO: Doc
+	/**
+	 * Gets the common types form the type lists of @p Set1, @p Set2, and Sets.
+	 * @tparam Set1 The first set.
+	 * @tparam Set2 The second set.
+	 * @tparam Sets Any additional sets.
+	 */
 	template<class Set1, class Set2, class... Sets>
 	struct Intersection;
 
@@ -29,7 +34,7 @@ namespace Meta::TypeSet {
 		>::type> {
 	};
 
-	// TODO: Intersection of more than two sets
+	/** @see Intersection */
 	template<class Set1, class Set2, class Set3, class... Sets>
 	struct Intersection<Set1, Set2, Set3, Sets...>
 		: Intersection<
