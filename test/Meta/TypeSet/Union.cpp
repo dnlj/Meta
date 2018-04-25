@@ -9,53 +9,96 @@
 // Google Test
 #include <gtest/gtest.h>
 
-#define CREATE_TEST_TYPE(ClassName, Type)\
-	struct ClassName {\
-		using Set11 = Type<int, float, bool, double>;\
-		using Set12 = Type<char, float, double, long>;\
-		using Union1 = Type<int, float, bool, double, char, long>;\
-		\
-		using Set21 = Type<int, int, int, int>;\
-		using Set22 = Type<int, int>;\
-		using Union2 = Type<int>;\
-	};\
 
+// Two Unions Test
 namespace {
-	// Define the typed test fixture
-	template<class T>
-	class MetaTypeSetUnionTest : public testing::Test {
-	};
+	template<class Set1, class Set2, class Correct>
+	void TwoUnions_Assert() {
+		constexpr auto value = std::is_same<
+			typename Meta::TypeSet::Union<Set1, Set2>::type,
+			Correct
+		>::value;
 
-	// Defined the classes for the tests.
-	CREATE_TEST_TYPE(TypeSetTest, Meta::TypeSet::TypeSet);
-	CREATE_TEST_TYPE(TupleTest, std::tuple);
+		ASSERT_TRUE(value);
+	}
 
-	// Define the types to use with our typed test
-	using Implementations = testing::Types<
-		TypeSetTest,
-		TupleTest
-	>;
+	template<template<class...> class SetType>
+	void TwoUnions_Test() {
+		// All same types
+		TwoUnions_Assert<
+			SetType<int, float, bool, double>,
+			SetType<int, float, bool, double>,
+			SetType<int, float, bool, double>
+		>();
+
+		// Some same types
+		TwoUnions_Assert<
+			SetType<int, float, bool, double>,
+			SetType<int, long, bool, char>,
+			SetType<int, float, bool, double, long, char>
+		>();
+
+		// None same types
+		TwoUnions_Assert<
+			SetType<int, float, bool, double>,
+			SetType<unsigned, long, long double, char>,
+			SetType<int, float, bool, double, unsigned, long, long double, char>
+		>();
+	}
 }
 
-// Define the tests
-TYPED_TEST_CASE(MetaTypeSetUnionTest, Implementations);
-
-TYPED_TEST(MetaTypeSetUnionTest, Union) {
-	{
-		constexpr auto condition = std::is_same<
-			Meta::TypeSet::Union<TypeParam::Set11, TypeParam::Set12>::type,
-			TypeParam::Union1
+// Multiple Unions Test
+namespace {
+	template<class Set1, class Set2, class Set3, class Set4>
+	void MultipleUnions_Assert() {
+		constexpr auto value = std::is_same<
+			typename Meta::TypeSet::Union<Set1, Set2, Set3, Set4>::type,
+			typename Meta::TypeSet::Union<
+				typename Meta::TypeSet::Union<
+					typename Meta::TypeSet::Union<Set1, Set2>::type,
+					Set3
+				>::type,
+				Set4
+			>::type
 		>::value;
 
-		ASSERT_TRUE(condition);
+		ASSERT_TRUE(value);
 	}
 
-	{
-		constexpr auto condition = std::is_same<
-			Meta::TypeSet::Union<TypeParam::Set21, TypeParam::Set22>::type,
-			TypeParam::Union2
-		>::value;
+	template<template<class...> class SetType>
+	void MultipleUnions_Test() {
+		// All same types
+		MultipleUnions_Assert<
+			SetType<int, float, bool, double>,
+			SetType<int, float, bool, double>,
+			SetType<int, float, bool, double>,
+			SetType<int, float, bool, double>
+		>();
 
-		ASSERT_TRUE(condition);
+		// Some same types
+		MultipleUnions_Assert<
+			SetType<int, float, bool, double>,
+			SetType<int, long, bool, char>,
+			SetType<char, double, bool, int>,
+			SetType<unsigned, long, long double, char>
+		>();
+
+		// None same types
+		MultipleUnions_Assert<
+			SetType<int, float, bool, double>,
+			SetType<unsigned, long, long double, char>,
+			SetType<short, unsigned char, unsigned long, unsigned short>,
+			SetType<long long, unsigned long long>
+		>();
 	}
+}
+
+TEST(MetaTypeSetUnionTest, TwoUnions) {
+	TwoUnions_Test<Meta::TypeSet::TypeSet>();
+	TwoUnions_Test<std::tuple>();
+}
+
+TEST(MetaTypeSetUnionTest, MultipleUnions) {
+	MultipleUnions_Test<Meta::TypeSet::TypeSet>();
+	MultipleUnions_Test<std::tuple>();
 }
