@@ -5,8 +5,7 @@
 
 // Meta
 #include <Meta/TypeSet/Has.hpp>
-#include <Meta/TypeSet/MakeUnique.hpp>
-#include <Meta/TypeSet/Concat.hpp>
+#include <Meta/TypeSet/Union.hpp>
 
 namespace Meta::TypeSet {
 	/**
@@ -25,13 +24,13 @@ namespace Meta::TypeSet {
 		template<class...> class Set2,
 		class... Types2
 	> struct Intersection<Set1<Types1...>, Set2<Types2...>>
-		: MakeUnique<typename Concat<
+		: Union<
 			typename std::conditional<
 				Has<Set1<Types1...>, Types2>::value,
 				Set1<Types2>,
 				Set1<>
 			>::type...
-		>::type> {
+		> {
 	};
 
 	/** @see Intersection */
@@ -41,6 +40,6 @@ namespace Meta::TypeSet {
 			typename Intersection<Set1, Set2>::type,
 			Set3,
 			Sets...
-		>{
+		> {
 	};
 }
