@@ -18,11 +18,12 @@ namespace Meta::TypeSet {
 
 	/** @see Concat */
 	template<
-		template<class...> class Set,
+		template<class...> class Set1,
 		class... Types1,
+		template<class...> class Set2,
 		class... Types2
-	> struct Concat<Set<Types1...>, Set<Types2...>> {
-		using type = Set<Types1..., Types2...>;
+	> struct Concat<Set1<Types1...>, Set2<Types2...>> {
+		using type = Set1<Types1..., Types2...>;
 	};
 
 	/** @see Concat */
