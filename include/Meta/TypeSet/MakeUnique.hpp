@@ -16,6 +16,12 @@ namespace Meta::TypeSet {
 	 */
 	template<class Set, class I = void>
 	struct MakeUnique;
+
+	/** @see MakeUnique */
+	template<template<class...> class Set>
+	struct MakeUnique<Set<>, void> {
+		using type = Set<>;
+	};
 		
 	/** @see MakeUnique */
 	template<template<class...> class Set, class... Types>
