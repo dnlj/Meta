@@ -96,11 +96,13 @@ project(PROJECT_NAME .."Test")
 
 	files {
 		"./test/**",
+		"./test_include/**",
 	}
 	
 	includedirs {
 		"./deps/googletest/googlemock/include",
 		"./deps/googletest/googletest/include",
+		"./test_include",
 	}
 	
 	libdirs {
