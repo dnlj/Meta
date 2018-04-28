@@ -4,13 +4,13 @@
 #include <Meta/IndexOf.hpp>
 
 namespace Meta::TypeSet {
-	template<class Type, class Set>
+	template<class Set, class Type>
 	struct IndexOf;
 
 	template<
-		class Type,
 		template<class...> class Set,
-		class... Types
-	> struct IndexOf<Type, Set<Types...>> : Meta::IndexOf<Type, Types...> {
+		class... Types,
+		class Type
+	> struct IndexOf<Set<Types...>, Type> : Meta::IndexOf<Type, Types...> {
 	};
 }
