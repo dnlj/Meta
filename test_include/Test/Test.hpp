@@ -3,6 +3,9 @@
 // STD
 #include <type_traits>
 
+// Meta
+#include <Meta/TypeSet/IsEqual.hpp>
+
 // Google Test
 #include <gtest/gtest.h>
 
@@ -17,7 +20,7 @@ namespace Test {
 	 */
 	template<template<class...> class Operator, class Set1, class Set2, class Correct>
 	constexpr bool checkBinaryTypeOperator() noexcept {
-		return std::is_same<
+		return Meta::TypeSet::IsEqual<
 			typename Operator<Set1, Set2>::type,
 			Correct
 		>::value;
@@ -35,7 +38,7 @@ namespace Test {
 	 */
 	template<template<class...> class Operator, class Set1, class Set2, class Set3, class Set4>
 	constexpr bool checkBinaryTypeOperatorMultiple() noexcept {
-		return std::is_same<
+		return Meta::TypeSet::IsEqual<
 			typename Operator<Set1, Set2, Set3, Set4>::type,
 			typename Operator<
 				typename Operator<
