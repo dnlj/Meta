@@ -14,11 +14,11 @@
 
 
 namespace {
-	template<template<class...> class SetType>
+	template<template<class...> class Operation, template<class...> class SetType>
 	void twoTest() {
 		{ // Empty
 			constexpr auto value = Test::checkBinaryTypeOperator<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<>,
 				SetType<>,
@@ -31,7 +31,7 @@ namespace {
 
 		{ // All same types
 			constexpr auto value = Test::checkBinaryTypeOperator<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
 				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
@@ -44,7 +44,7 @@ namespace {
 
 		{ // Some same types
 			constexpr auto value = Test::checkBinaryTypeOperator<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
 				SetType<Type<3>, Type<6>, Type<1>, Type<8>>,
@@ -57,7 +57,7 @@ namespace {
 
 		{ // None same types
 			constexpr auto value = Test::checkBinaryTypeOperator<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
 				SetType<Type<5>, Type<6>, Type<7>, Type<8>>,
@@ -69,11 +69,11 @@ namespace {
 		}
 	}
 
-	template<template<class...> class SetType>
+	template<template<class...> class Operation, template<class...> class SetType>
 	void multipleTest() {
 		{ // Empty
 			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<>,
 				SetType<>,
@@ -86,7 +86,7 @@ namespace {
 
 		{ // All same types
 			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
 				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
@@ -99,7 +99,7 @@ namespace {
 
 		{ // Some same types
 			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
 				SetType<Type< 3>, Type< 6>, Type< 7>, Type< 8>>,
@@ -112,7 +112,7 @@ namespace {
 
 		{ // Some same types all
 			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
 				SetType<Type< 3>, Type< 6>, Type< 7>, Type< 8>>,
@@ -125,7 +125,7 @@ namespace {
 
 		{ // None same types
 			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
-				Meta::TypeSet::Intersection,
+				Operation,
 			
 				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
 				SetType<Type< 5>, Type< 6>, Type< 7>, Type< 8>>,
@@ -138,12 +138,12 @@ namespace {
 	}
 
 	TEST(Meta_TypeSet_Intersection, Two) {
-		#define X(type) twoTest<type>();
+		#define X(type) twoTest<Meta::TypeSet::Intersection, type>();
 		#include <Test/SetTypes.xmacro>
 	}
 
 	TEST(Meta_TypeSet_Intersection, Multiple) {
-		#define X(type) multipleTest<type>();
+		#define X(type) multipleTest<Meta::TypeSet::Intersection, type>();
 		#include <Test/SetTypes.xmacro>
 	}
 }
