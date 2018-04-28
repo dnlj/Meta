@@ -16,12 +16,38 @@
 namespace {
 	template<template<class...> class Operation, template<class...> class SetType>
 	void twoTest() {
-		{ // Empty
+		{ // All empty
 			constexpr auto value = Test::checkBinaryTypeOperator<
 				Operation,
 			
 				SetType<>,
 				SetType<>,
+
+				SetType<>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // One empty
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Operation,
+			
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<>,
+
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // One empty (2)
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Operation,
+			
+				SetType<>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
 
 				SetType<>
 			>();
@@ -71,7 +97,7 @@ namespace {
 
 	template<template<class...> class Operation, template<class...> class SetType>
 	void multipleTest() {
-		{ // Empty
+		{ // All empty
 			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
 				Operation,
 			
@@ -79,6 +105,45 @@ namespace {
 				SetType<>,
 				SetType<>,
 				SetType<>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some empty
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<>,
+				SetType<>,
+				SetType<>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some empty (2)
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<>,
+				SetType<>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // First empty
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>
 			>();
 
 			ASSERT_TRUE(value);
