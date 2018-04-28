@@ -27,8 +27,8 @@ namespace Meta::TypeSet {
 		: Union<
 			Set1<>,
 			typename std::conditional<
-				Has<Set1<Types1...>, Types2>::value,
-				Set1<Types2>,
+				Has<Set2<Types2...>, Types1>::value,
+				Set1<Types1>,
 				Set1<>
 			>::type...
 		> {
