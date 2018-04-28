@@ -1,6 +1,5 @@
 // STD
 #include <tuple>
-#include <type_traits>
 
 // Meta
 #include <Meta/TypeSet/TypeSet.hpp>
@@ -9,81 +8,142 @@
 // Google Test
 #include <gtest/gtest.h>
 
+// Test
+#include <Test/Type.hpp>
+#include <Test/Test.hpp>
 
-// Two Intersections Test
+
 namespace {
-	template<class Set1, class Set2, class Correct>
-	void TwoIntersections_Assert() {
-		constexpr auto value = std::is_same<
-			typename Meta::TypeSet::Intersection<Set1, Set2>::type,
-			Correct
-		>::value;
+	template<template<class...> class SetType>
+	void twoTest() {
+		{ // Empty
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Meta::TypeSet::Intersection,
+			
+				SetType<>,
+				SetType<>,
 
-		ASSERT_TRUE(value);
+				SetType<>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // All same types
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Meta::TypeSet::Intersection,
+			
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some same types
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Meta::TypeSet::Intersection,
+			
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<3>, Type<6>, Type<1>, Type<8>>,
+
+				SetType<Type<1>, Type<3>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // None same types
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Meta::TypeSet::Intersection,
+			
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<5>, Type<6>, Type<7>, Type<8>>,
+
+				SetType<>
+			>();
+
+			ASSERT_TRUE(value);
+		}
 	}
 
 	template<template<class...> class SetType>
-	void TwoIntersections_Test() {
-		// All same types
-		TwoIntersections_Assert<
-			SetType<int, float, bool, double>,
-			SetType<int, float, bool, double>,
-			SetType<int, float, bool, double>
-		>();
+	void multipleTest() {
+		{ // Empty
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Meta::TypeSet::Intersection,
+			
+				SetType<>,
+				SetType<>,
+				SetType<>,
+				SetType<>
+			>();
 
-		// Some same types
-		TwoIntersections_Assert<
-			SetType<int, float, bool, double>,
-			SetType<int, long, bool, char>,
-			SetType<int, bool>
-		>();
+			ASSERT_TRUE(value);
+		}
+
+		{ // All same types
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Meta::TypeSet::Intersection,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>
+			>();
+			
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some same types
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Meta::TypeSet::Intersection,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 3>, Type< 6>, Type< 7>, Type< 8>>,
+				SetType<Type< 9>, Type< 1>, Type<11>, Type<12>>,
+				SetType<Type<13>, Type<14>, Type< 2>, Type<16>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some same types all
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Meta::TypeSet::Intersection,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 3>, Type< 6>, Type< 7>, Type< 8>>,
+				SetType<Type< 9>, Type< 3>, Type<11>, Type<12>>,
+				SetType<Type<13>, Type<14>, Type< 2>, Type< 3>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // None same types
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Meta::TypeSet::Intersection,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 5>, Type< 6>, Type< 7>, Type< 8>>,
+				SetType<Type< 9>, Type<10>, Type<11>, Type<12>>,
+				SetType<Type<13>, Type<14>, Type<15>, Type<16>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
 	}
-}
 
-// Multiple Intersections Test
-namespace {
-	template<class Set1, class Set2, class Set3, class Set4>
-	void MultipleIntersections_Assert() {
-		constexpr auto value = std::is_same<
-			typename Meta::TypeSet::Intersection<Set1, Set2, Set3, Set4>::type,
-			typename Meta::TypeSet::Intersection<
-				typename Meta::TypeSet::Intersection<
-					typename Meta::TypeSet::Intersection<Set1, Set2>::type,
-					Set3
-				>::type,
-				Set4
-			>::type
-		>::value;
-
-		ASSERT_TRUE(value);
+	TEST(Meta_TypeSet_Intersection, Two) {
+		#define X(type) twoTest<type>();
+		#include <Test/SetTypes.xmacro>
 	}
 
-	template<template<class...> class SetType>
-	void MultipleIntersections_Test() {
-		// All same types
-		MultipleIntersections_Assert<
-			SetType<int, float, bool, double>,
-			SetType<int, float, bool, double>,
-			SetType<int, float, bool, double>,
-			SetType<int, float, bool, double>
-		>();
-
-		// Some same types
-		MultipleIntersections_Assert<
-			SetType<int, float, bool, double>,
-			SetType<int, long, bool, char>,
-			SetType<char, double, bool, int>,
-			SetType<char, double, float, int>
-		>();
+	TEST(Meta_TypeSet_Intersection, Multiple) {
+		#define X(type) multipleTest<type>();
+		#include <Test/SetTypes.xmacro>
 	}
-}
-
-TEST(MetaTypeSetIntersectionTest, TwoIntersections) {
-	TwoIntersections_Test<Meta::TypeSet::TypeSet>();
-	TwoIntersections_Test<std::tuple>();
-}
-
-TEST(MetaTypeSetIntersectionTest, MultipleIntersections) {
-	MultipleIntersections_Test<Meta::TypeSet::TypeSet>();
-	MultipleIntersections_Test<std::tuple>();
 }

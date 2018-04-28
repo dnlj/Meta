@@ -25,6 +25,7 @@ namespace Meta::TypeSet {
 		class... Types2
 	> struct Intersection<Set1<Types1...>, Set2<Types2...>>
 		: Union<
+			Set1<>,
 			typename std::conditional<
 				Has<Set1<Types1...>, Types2>::value,
 				Set1<Types2>,
