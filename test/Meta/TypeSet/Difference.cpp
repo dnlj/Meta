@@ -91,7 +91,7 @@ namespace {
 
 		// Some same types all
 		Test::multipleBinaryAssert<
-			Meta::TypeSet::Intersection,
+			Meta::TypeSet::Difference,
 			
 			SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
 			SetType<Type< 3>, Type< 6>, Type< 7>, Type< 8>>,
