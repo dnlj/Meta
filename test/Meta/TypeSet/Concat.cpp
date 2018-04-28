@@ -1,61 +1,214 @@
 // STD
 #include <tuple>
-#include <type_traits>
 
 // Meta
-#include <Meta/TypeSet/Concat.hpp>
 #include <Meta/TypeSet/TypeSet.hpp>
+#include <Meta/TypeSet/Concat.hpp>
 
 // Google Test
 #include <gtest/gtest.h>
 
-#define CREATE_TEST_TYPE(ClassName, Type)\
-	struct ClassName {\
-		using Set11 = Type<int, float, bool, double>;\
-		using Set12 = Type<char, float, double, long>;\
-		using Concat1 = Type<int, float, bool, double, char, float, double, long>;\
-		\
-		using Set21 = Type<int, int, int, int>;\
-		using Set22 = Type<int, int>;\
-		using Concat2 = Type<int, int, int, int, int, int>;\
-	};\
+// Test
+#include <Test/Type.hpp>
+#include <Test/Test.hpp>
+
 
 namespace {
-	// Define the typed test fixture
-	template<class T>
-	class MetaTypeSetConcatTest : public testing::Test {
-	};
+	template<template<class...> class Operation, template<class...> class SetType>
+	void twoTest() {
+		{ // All empty
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Operation,
+			
+				SetType<>,
+				SetType<>,
 
-	// Defined the classes for the tests.
-	CREATE_TEST_TYPE(TypeSetTest, Meta::TypeSet::TypeSet);
-	CREATE_TEST_TYPE(TupleTest, std::tuple);
+				SetType<>
+			>();
 
-	// Define the types to use with our typed test
-	using Implementations = testing::Types<
-		TypeSetTest,
-		TupleTest
-	>;
-}
+			ASSERT_TRUE(value);
+		}
 
-// Define the tests
-TYPED_TEST_CASE(MetaTypeSetConcatTest, Implementations);
+		{ // One empty
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Operation,
+			
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<>,
 
-TYPED_TEST(MetaTypeSetConcatTest, Concat) {
-	{
-		constexpr auto condition = std::is_same<
-			Meta::TypeSet::Concat<TypeParam::Set11, TypeParam::Set12>::type,
-			TypeParam::Concat1
-		>::value;
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>();
 
-		ASSERT_TRUE(condition);
+			ASSERT_TRUE(value);
+		}
+
+		{ // One empty (2)
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Operation,
+			
+				SetType<>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // All same types
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Operation,
+			
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>, Type<1>, Type<2>, Type<3>, Type<4>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some same types
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Operation,
+			
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<3>, Type<6>, Type<1>, Type<8>>,
+
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>, Type<3>, Type<6>, Type<1>, Type<8>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // None same types
+			constexpr auto value = Test::checkBinaryTypeOperator<
+				Operation,
+			
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<5>, Type<6>, Type<7>, Type<8>>,
+
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>, Type<5>, Type<6>, Type<7>, Type<8>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
 	}
 
-	{
-		constexpr auto condition = std::is_same<
-			Meta::TypeSet::Concat<TypeParam::Set21, TypeParam::Set22>::type,
-			TypeParam::Concat2
-		>::value;
+	template<template<class...> class Operation, template<class...> class SetType>
+	void multipleTest() {
+		{ // All empty
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<>,
+				SetType<>,
+				SetType<>,
+				SetType<>
+			>();
 
-		ASSERT_TRUE(condition);
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some empty
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<>,
+				SetType<>,
+				SetType<>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some empty (2)
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<>,
+				SetType<>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // First empty
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // All same types
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>
+			>();
+			
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some same types
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 3>, Type< 6>, Type< 7>, Type< 8>>,
+				SetType<Type< 9>, Type< 1>, Type<11>, Type<12>>,
+				SetType<Type<13>, Type<14>, Type< 2>, Type<16>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // Some same types all
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 3>, Type< 6>, Type< 7>, Type< 8>>,
+				SetType<Type< 9>, Type< 3>, Type<11>, Type<12>>,
+				SetType<Type<13>, Type<14>, Type< 2>, Type< 3>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // None same types
+			constexpr auto value = Test::checkBinaryTypeOperatorMultiple<
+				Operation,
+			
+				SetType<Type< 1>, Type< 2>, Type< 3>, Type< 4>>,
+				SetType<Type< 5>, Type< 6>, Type< 7>, Type< 8>>,
+				SetType<Type< 9>, Type<10>, Type<11>, Type<12>>,
+				SetType<Type<13>, Type<14>, Type<15>, Type<16>>
+			>();
+
+			ASSERT_TRUE(value);
+		}
+	}
+
+	TEST(Meta_TypeSet_Concat, Two) {
+		#define X(type) twoTest<Meta::TypeSet::Concat, type>();
+		#include <Test/SetTypes.xmacro>
+	}
+
+	TEST(Meta_TypeSet_Concat, Multiple) {
+		#define X(type) multipleTest<Meta::TypeSet::Concat, type>();
+		#include <Test/SetTypes.xmacro>
 	}
 }
