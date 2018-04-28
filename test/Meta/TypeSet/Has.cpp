@@ -15,38 +15,38 @@
 namespace {
 	template<template<class...> class Operation, template<class...> class SetType>
 	void singleTest() {
-		{ // Empty set
-			constexpr auto value = Meta::TypeSet::Has<SetType<>, Type<1>>::value;
+		{ // Set size = 0
+			constexpr auto value = Operation<SetType<>, Type<1>>::value;
 
 			ASSERT_FALSE(value);
 		}
 
 		{ // Set size = 1; Has type
-			constexpr auto value = Meta::TypeSet::Has<SetType<Type<1>>, Type<1>>::value;
+			constexpr auto value = Operation<SetType<Type<1>>, Type<1>>::value;
 
 			ASSERT_TRUE(value);
 		}
 
 		{ // Set size = 1; Does not have type
-			constexpr auto value = Meta::TypeSet::Has<SetType<Type<2>>, Type<1>>::value;
+			constexpr auto value = Operation<SetType<Type<2>>, Type<1>>::value;
 
 			ASSERT_FALSE(value);
 		}
 
 		{ // Set size = 2; Has type
-			constexpr auto value = Meta::TypeSet::Has<SetType<Type<1>, Type<2>>, Type<1>>::value;
+			constexpr auto value = Operation<SetType<Type<1>, Type<2>>, Type<1>>::value;
 
 			ASSERT_TRUE(value);
 		}
 
 		{ // Set size = 2; Does not have type
-			constexpr auto value = Meta::TypeSet::Has<SetType<Type<2>, Type<3>>, Type<1>>::value;
+			constexpr auto value = Operation<SetType<Type<2>, Type<3>>, Type<1>>::value;
 
 			ASSERT_FALSE(value);
 		}
 
 		{ // Set size = 4; Has type
-			constexpr auto value = Meta::TypeSet::Has<
+			constexpr auto value = Operation<
 				SetType<Type<2>, Type<1>, Type<3>, Type<4>>,
 				Type<1>
 			>::value;
@@ -55,7 +55,7 @@ namespace {
 		}
 
 		{ // Set size = 4; Does not have type
-			constexpr auto value = Meta::TypeSet::Has<
+			constexpr auto value = Operation<
 				SetType<Type<2>, Type<3>, Type<4>, Type<5>>,
 				Type<1>
 			>::value;
