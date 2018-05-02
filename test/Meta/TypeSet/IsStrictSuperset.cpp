@@ -1,6 +1,5 @@
-// STD
+/// STD
 #include <tuple>
-#include <type_traits>
 
 // Meta
 #include <Meta/TypeSet/TypeSet.hpp>
@@ -9,89 +8,156 @@
 // Google Test
 #include <gtest/gtest.h>
 
-#define CREATE_TEST_TYPE(ClassName, Type)\
-	struct ClassName {\
-		/* A.size > B.size; same types, same order */\
-		using Set11 = Type<int, float, bool, double>;\
-		using Set12 = Type<float, double>;\
-		constexpr static auto value1 = true;\
-		\
-		/* A.size > B.size; same types, different order */\
-		using Set21 = Type<int, float, bool, double>;\
-		using Set22 = Type<double, float>;\
-		constexpr static auto value2 = true;\
-		\
-		/* A.size > B.size; different types */\
-		using Set31 = Type<int, float, bool, double>;\
-		using Set32 = Type<char, double>;\
-		constexpr static auto value3 = false;\
-		\
-		\
-		/* A.size == B.size; same types, same order */\
-		using Set41 = Type<int, float, bool, double>;\
-		using Set42 = Type<int, float, bool, double>;\
-		constexpr static auto value4 = false;\
-		\
-		/* A.size == B.size; same types, different order */\
-		using Set51 = Type<int, float, bool, double>;\
-		using Set52 = Type<float, bool, int, double>;\
-		constexpr static auto value5 = false;\
-		\
-		/* A.size == B.size; different types */\
-		using Set61 = Type<int, float, bool, double>;\
-		using Set62 = Type<int, float, long, double>;\
-		constexpr static auto value6 = false;\
-		\
-		\
-		/* A.size < B.size; same types */\
-		using Set71 = Type<float, double>;\
-		using Set72 = Type<int, float, bool, double>;\
-		constexpr static auto value7 = false;\
-		\
-		/* A.size < B.size; same types, different order */\
-		using Set81 = Type<float, double>;\
-		using Set82 = Type<int, float, bool, double>;\
-		constexpr static auto value8 = false;\
-		\
-		/* A.size < B.size; different types */\
-		using Set91 = Type<char, double>;\
-		using Set92 = Type<int, float, bool, double>;\
-		constexpr static auto value9 = false;\
-	};\
+// Test
+#include <Test/Type.hpp>
+#include <Test/Test.hpp>
 
-#define CREATE_TEST_ASSERT(N) {\
-	constexpr auto value = Meta::TypeSet::IsStrictSuperset<TypeParam::Set##N##1, TypeParam::Set##N##2>::value;\
-	ASSERT_EQ(value, TypeParam::value##N);\
-}\
 
 namespace {
-	// Define the typed test fixture
-	template<class T>
-	class MetaTypeSetIsStrictSupersetTest : public testing::Test {
-	};
+	template<template<class...> class Operation, template<class...> class SetType>
+	void twoTest() {
+		{ // A.size > B.size; one empty
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<>
+			>::value;
 
-	// Defined the classes for the tests.
-	CREATE_TEST_TYPE(TypeSetTest, Meta::TypeSet::TypeSet);
-	CREATE_TEST_TYPE(TupleTest, std::tuple);
+			ASSERT_TRUE(value);
+		}
 
-	// Define the types to use with our typed test
-	using Implementations = testing::Types<
-		TypeSetTest,
-		TupleTest
-	>;
-}
+		{ // A.size > B.size; same types, same order
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<1>, Type<2>>
+			>::value;
 
-// Define the tests
-TYPED_TEST_CASE(MetaTypeSetIsStrictSupersetTest, Implementations);
+			ASSERT_TRUE(value);
+		}
 
-TYPED_TEST(MetaTypeSetIsStrictSupersetTest, IsStrictSuperset) {
-	CREATE_TEST_ASSERT(1);
-	CREATE_TEST_ASSERT(2);
-	CREATE_TEST_ASSERT(3);
-	CREATE_TEST_ASSERT(4);
-	CREATE_TEST_ASSERT(5);
-	CREATE_TEST_ASSERT(6);
-	CREATE_TEST_ASSERT(7);
-	CREATE_TEST_ASSERT(8);
-	CREATE_TEST_ASSERT(9);
+		{ // A.size > B.size; same types, different order
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<2>, Type<1>>
+			>::value;
+
+			ASSERT_TRUE(value);
+		}
+
+		{ // A.size > B.size; different types
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<5>, Type<6>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size > B.size; some types
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<5>, Type<3>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+
+
+		{ // A.size == B.size; both empty
+			constexpr auto value = Operation<
+				SetType<>,
+				SetType<>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size == B.size; same types, same order
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size == B.size; same types, different order
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<4>, Type<3>, Type<2>, Type<1>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size == B.size; different types
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<5>, Type<6>, Type<7>, Type<8>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size == B.size; some types
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>,
+				SetType<Type<5>, Type<3>, Type<2>, Type<8>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+
+
+		{ // A.size < B.size; one empty
+			constexpr auto value = Operation<
+				SetType<>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size < B.size; same types, same order
+			constexpr auto value = Operation<
+				SetType<Type<1>, Type<2>>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size < B.size; same types, different order
+			constexpr auto value = Operation<
+				SetType<Type<2>, Type<1>>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size < B.size; different types
+			constexpr auto value = Operation<
+				SetType<Type<5>, Type<6>>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+
+		{ // A.size < B.size; some types
+			constexpr auto value = Operation<
+				SetType<Type<5>, Type<6>, Type<2>, Type<3>>,
+				SetType<Type<1>, Type<2>, Type<3>, Type<4>>
+			>::value;
+
+			ASSERT_FALSE(value);
+		}
+	}
+
+	TEST(Meta_TypeSet_IsStrictSuperset, Two) {
+		#define X(type) twoTest<Meta::TypeSet::IsStrictSuperset, type>();
+		#include <Test/SetTypes.xmacro>
+	}
 }
