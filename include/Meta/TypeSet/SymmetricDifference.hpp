@@ -5,7 +5,12 @@
 #include <Meta/TypeSet/Difference.hpp>
 
 namespace Meta::TypeSet {
-	// TODO: Doc
+	/**
+	 * Makes a type set of all the types in @p Set1 and @p Set2 but not in both.
+	 * @tparam Set1 The first set.
+	 * @tparam Set2 The second set.
+	 * @tparam Sets Any additional sets.
+	 */
 	template<class Set1, class Set2, class... Sets>
 	struct SymmetricDifference;
 
