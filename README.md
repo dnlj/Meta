@@ -8,7 +8,7 @@ Since Meta is header only, all that you need to do is make the `./include/` dire
 
 ## Running the Tests
 
-Before we begin it should be noted that, currently, building the tests is only configured for Windows with Visual Studio (see build/vs_build.lua for version details). We will also need [premake.](https://github.com/premake/premake-core)
+Before we begin it should be noted that, currently, building the tests is only configured for Windows with Visual Studio (see `./build/vs_build.lua` for version details). We will also need [premake.](https://github.com/premake/premake-core)
 
 First download and build the needed dependencies:
 
