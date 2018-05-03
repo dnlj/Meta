@@ -1,11 +1,14 @@
 require "build/action_clean"
 require "build/action_deps"
+require "build/action_build"
+require "build/action_tests"
+local vs = require("build/vs_build")
 
 --------------------------------------------------------------------------------
 -- Constants
 --------------------------------------------------------------------------------
-local PROJECT_NAME = "Meta"
-local CONFIG_TYPE_STR = '%{string.lower(string.match(cfg.buildcfg, "^([^_]+)"))}'
+PROJECT_NAME = "Meta"
+CONFIG_TYPE_STR = '%{string.lower(string.match(cfg.buildcfg, "^([^_]+)"))}'
 
 --------------------------------------------------------------------------------
 -- The files and folders to delete when the "clean" action is run.
@@ -29,7 +32,6 @@ action_clean_files = {
 	"./".. PROJECT_NAME .."Workspace.VC.db",
 	"./".. PROJECT_NAME .."Workspace.VC.VC.opendb"
 }
-
 
 --------------------------------------------------------------------------------
 -- The main premake settings
