@@ -31,3 +31,47 @@ premake5 test
 ```
 
 ## Examples
+
+`Meta::TypeSet` works for any type (or combination of types) with a parameter pack, such as `std::tuple`. In this example we will use `Meta::TypeSet::TypeSet` to represent our sets.
+
+```C++
+// Define some types
+using Set1 = Meta::TypeSet::TypeSet<int, float, bool>;
+using Set2 = Meta::TypeSet::TypeSet<bool, double, char>;
+using Set3 = Meta::TypeSet::TypeSet<double>;
+using Set4 = Meta::TypeSet::TypeSet<int, float, int, bool, int>;
+using Set5 = Meta::TypeSet::TypeSet<bool, int, float>;
+
+// Check if a set has a type
+Meta::TypeSet::Has<Set1, float>::value; // true
+Meta::TypeSet::Has<Set1, double>::value; // false
+
+// Get the index of a type
+Meta::TypeSet::IndexOf<Set1, int>::value; // 0
+Meta::TypeSet::IndexOf<Set1, float>::value; // 1
+Meta::TypeSet::IndexOf<Set1, bool>::value; // 2
+
+// Union of two sets
+Meta::TypeSet::Union<Set1, Set2>::type; // <int, float, bool, double, char>
+
+// Difference of two sets
+Meta::TypeSet::Difference<Set1, Set2>::type; // <int, float>
+
+// Intersection of two sets
+Meta::TypeSet::Intersection<Set1, Set2>::type; // <bool>
+
+// Symmetric Difference of two sets
+Meta::TypeSet::SymmetricDifference<Set1, Set2>::type; // <int, float, double, char>
+
+// Make a set unique
+Meta::TypeSet::MakeUnique<Set4>::type; // <int, float, bool>
+
+// Check if a set is a superset of another
+Meta::TypeSet::IsSuperset<Set2, Set3>::value; // true
+
+// Check if a set is a subset of another
+Meta::TypeSet::IsSubset<Set3, Set2>::value; // true
+
+// Check if two sets are equal
+Meta::TypeSet::IsEqual<Set1, Set5>::value; // true
+```
